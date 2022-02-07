@@ -4,6 +4,23 @@ import 'package:my_http_mockapi/core/models/user.dart';
 import 'package:my_http_mockapi/core/resources/environtment.dart';
 
 class UserHttp {
+  Future<List<User>> listOfUsers() async {
+    try {
+      var resp = await http.get(Uri.parse(endpoint));
+      if (resp.statusCode == 200) {
+        List map = jsonDecode(resp.body);
+        print(map);
+        List<User> users = map.map((e) => User.fromJson(e)).toList();
+        return users;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e);
+    }
+    return [];
+  }
+
   Future users() async {
     try {
       var resp = await http.get(Uri.parse(endpoint));

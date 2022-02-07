@@ -39,7 +39,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 onPressed: () async {
                   var resp = await UserHttp().addUsers(_etName.text);
                   if (resp) {
-                    Navigator.pop(context, true);
+                    Navigator.pop(context);
                     Fluttertoast.showToast(msg: "Success Add New User");
                   }
                 }),

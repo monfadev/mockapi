@@ -21,42 +21,62 @@ class _HomePageState extends State<HomePage> {
 
   RefreshController _refreshController = RefreshController();
 
-  @override
-  void initState() {
-    super.initState();
-    getUsers(true);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getUsers(true);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Center(child: CircularProgressIndicator())],
-          )
-        : SmartRefresher(
-            controller: _refreshController,
-            onRefresh: () => getUsers(true),
-            child: ListView.builder(
-              itemCount: _user.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(_user[index].name ?? ""),
-                  subtitle: Text(DateFormat('HH.mm').format(_user[index].createdAt!)),
-                  trailing: IconButton(
-                    icon: Icon(Icons.more_horiz),
-                    onPressed: () async {
-                      var resp = await UserHttp().deleteUsers(_user[index].id ?? "");
-                      if (resp) {
-                        Fluttertoast.showToast(msg: "Delete Success");
-                      }
-                    },
-                  ),
-                  onTap: () {},
-                );
-              },
-            ),
-          );
+    return FutureBuilder<List<User>>(
+      future: UserHttp().listOfUsers(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData && snapshot.hasError) {
+          return Center(child: CircularProgressIndicator());
+        }
+        return ListView(
+          children: snapshot.data!.map((e) => itemCategory(e)).toList(),
+        );
+      },
+    );
+    // return _loading
+    //     ? Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [Center(child: CircularProgressIndicator())],
+    //       )
+    //     : SmartRefresher(
+    //         controller: _refreshController,
+    //         onRefresh: () => getUsers(true),
+    //         child: ListView.builder(
+    //           itemCount: _user.length,
+    //           itemBuilder: (context, index) {
+    //             return ListTile(
+    //               title: Text(_user[index].name ?? ""),
+    //               subtitle: Text(DateFormat('HH.mm').format(_user[index].createdAt!)),
+    //               trailing: IconButton(
+    //                 icon: Icon(Icons.more_horiz),
+    //                 onPressed: () async {
+    //                   var resp = await UserHttp().deleteUsers(_user[index].id ?? "");
+    //                   if (resp) {
+    //                     Fluttertoast.showToast(msg: "Delete Success");
+    //                   }
+    //                 },
+    //               ),
+    //               onTap: () {},
+    //             );
+    //           },
+    //         ),
+    //       );
+  }
+
+  Widget itemCategory(User data) {
+    return ListTile(
+      title: Text(data.name ?? ""),
+    );
   }
 
   void getUsers([bool refresh = false]) async {
