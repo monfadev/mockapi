@@ -37,6 +37,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
             child: ElevatedButton(
                 child: Text("Save"),
                 onPressed: () async {
+                  if (_etName.text.trim().length == 0) return;
                   var resp = await UserHttp().addUsers(_etName.text);
                   if (resp) {
                     Navigator.pop(context);
