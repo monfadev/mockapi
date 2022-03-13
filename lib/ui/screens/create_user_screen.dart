@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:my_http_mockapi/core/https/user_http.dart';
+import 'package:my_http_mockapi/core/models/user.dart';
 
 class CreateUserScreen extends StatefulWidget {
   const CreateUserScreen({Key? key}) : super(key: key);
@@ -38,7 +41,8 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
                 child: Text("Save"),
                 onPressed: () async {
                   if (_etName.text.trim().length == 0) return;
-                  var resp = await UserHttp().addUsers(_etName.text);
+                  // var resp = await UserHttp().addUsers(_etName.text);
+                  var resp = await UserHttp().addUser(_etName.text);
                   if (resp) {
                     Navigator.pop(context);
                     Fluttertoast.showToast(msg: "Success Add New User");

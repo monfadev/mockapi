@@ -50,6 +50,27 @@ class UserHttp {
     }
   }
 
+  Future<bool> addUser(String name, {DateTime? date, String avatar = "avatar", String id = "1"}) async {
+    try {
+      Map<String, dynamic> userMap = User(name: name, createdAt: DateTime.now(), avatar: avatar, id: id).toJson();
+      print("userMap: $userMap");
+
+      String encode = jsonEncode(userMap);
+      print("jsonEncode: $encode");
+      var decode = jsonDecode(encode);
+      print("jsonDecode: $decode");
+
+      var resp = await http.post(Uri.parse(endpoint), body: decode);
+      print("resp ${resp.body}");
+      if (resp.statusCode <= 201) {
+        return true;
+      }
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
   Future updateUsers(String name) async {
     try {
       var body = {"name": name};
