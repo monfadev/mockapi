@@ -9,7 +9,7 @@ class UserHttp {
       var resp = await http.get(Uri.parse(endpoint));
       if (resp.statusCode == 200) {
         List map = jsonDecode(resp.body);
-        print(map);
+        // print(map);
         List<User> users = map.map((e) => User.fromJson(e)).toList();
         return users;
       } else {
@@ -53,14 +53,8 @@ class UserHttp {
   Future<bool> addUser(String name, {DateTime? date, String avatar = "avatar", String id = "1"}) async {
     try {
       Map<String, dynamic> userMap = User(name: name, createdAt: DateTime.now(), avatar: avatar, id: id).toJson();
-      print("userMap: $userMap");
 
-      String encode = jsonEncode(userMap);
-      print("jsonEncode: $encode");
-      var decode = jsonDecode(encode);
-      print("jsonDecode: $decode");
-
-      var resp = await http.post(Uri.parse(endpoint), body: decode);
+      var resp = await http.post(Uri.parse(endpoint), body: userMap);
       print("resp ${resp.body}");
       if (resp.statusCode <= 201) {
         return true;
